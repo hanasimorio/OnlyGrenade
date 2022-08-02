@@ -12,7 +12,7 @@ public class PlayerMove : MonoBehaviour
 
     private Rigidbody rb;
 
-
+    private PlayerStatus status;
 
     [SerializeField] private float movespeed;
     private float dashspeed;
@@ -27,6 +27,7 @@ public class PlayerMove : MonoBehaviour
     private bool ismove;
     private bool isdash;
     private bool isjump;
+    private bool jumpkey=false;
     private bool shotpre = false;
 
     private float xmove;
@@ -36,6 +37,7 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         ani = this.gameObject.GetComponent<Animator>();
+        status = gameObject.GetComponent<PlayerStatus>();
 
         rota = transform.rotation;
         rb = this.gameObject.GetComponent<Rigidbody>();
@@ -50,59 +52,70 @@ public class PlayerMove : MonoBehaviour
     {
         if (isstart)
         {
-            horizontal = Input.GetAxis("Horizontal");
-            vertical = Input.GetAxis("Vertical");
-
-            if (horizontal != 0 || vertical != 0)//ˆÚ“®‚Ì“ü—Í‚ª‚È‚©‚Á‚½‚ç
+            if (!status.isdead)
             {
-                ismove = true;
-                if (Input.GetKey(KeyCode.LeftShift))
+                horizontal = Input.GetAxis("Horizontal");
+                vertical = Input.GetAxis("Vertical");
+                //Debug.Log(isjump);
+
+                if (horizontal != 0 || vertical != 0)//ˆÚ“®‚Ì“ü—Í‚ª‚È‚©‚Á‚½‚ç
                 {
-                    isdash = true;
+                    ismove = true;
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        isdash = true;
+                    }
+                    else
+                    {
+                        isdash = false;
+                    }
                 }
                 else
                 {
-                    isdash = false;
+                    ismove = false;
                 }
+
+                if (Input.GetKeyDown(KeyCode.Space)) Jump();
+
+                var horizontalrotation = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
+
+                velocity = horizontalrotation * new Vector3(horizontal, 0, vertical).normalized;
+                var anispeed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
+                var rotaSpeed = 600 * Time.deltaTime;
+                //Debug.Log(velocity);
+
+                if (Input.GetMouseButtonDown(0)) shotpre = true;
+                if (Input.GetMouseButtonUp(0)) shotpre = false;
+
+                if (!shotpre)
+                {
+                    if (velocity.magnitude > 0.5f)
+                    {
+                        rota = Quaternion.LookRotation(velocity, Vector3.up);
+                    }
+                }
+                else
+                {
+                    shotvelocity = horizontalrotation * new Vector3(0, 0, 1).normalized;
+                    if (shotvelocity.magnitude > 0.5f)
+                    {
+                        rota = Quaternion.LookRotation(shotvelocity, Vector3.up);
+                    }
+                }
+
+
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, rota, rotaSpeed);
+
+                ani.SetFloat("Speed", velocity.magnitude * anispeed, 0.1f, Time.deltaTime);
             }
             else
             {
-                ismove = false;
+                rb.constraints = RigidbodyConstraints.FreezeAll;
+                
+                ani.SetBool("Death", true);
             }
-
-            if (Input.GetKeyDown(KeyCode.Space)) Jump();
-
-            var horizontalrotation = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
-
-            velocity = horizontalrotation * new Vector3(horizontal, 0, vertical).normalized;
-            var anispeed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
-            var rotaSpeed = 600 * Time.deltaTime;
-            //Debug.Log(velocity);
-
-            if (Input.GetMouseButtonDown(0)) shotpre = true;
-            if (Input.GetMouseButtonUp(0)) shotpre = false;
-
-            if (!shotpre)
-            {
-                if (velocity.magnitude > 0.5f)
-                {
-                    rota = Quaternion.LookRotation(velocity, Vector3.up);
-                }
-            }
-            else
-            {
-                shotvelocity = horizontalrotation * new Vector3(0, 0, 1).normalized;    
-                if(shotvelocity.magnitude > 0.5f)
-                {
-                    rota = Quaternion.LookRotation(shotvelocity, Vector3.up);
-                }
-            }
-
-
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rota, rotaSpeed);
-
-            ani.SetFloat("Speed", velocity.magnitude * anispeed, 0.1f, Time.deltaTime);
         }
+
 
 
 
@@ -148,7 +161,9 @@ public class PlayerMove : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Ground"))
         {
+            if(jumpkey)
             isjump = true;
+            jumpkey = false;
         }
     }
 
@@ -158,6 +173,7 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(transform.up * jumppower, ForceMode.Impulse);
         ani.SetTrigger("Jump");
         isjump = true;
+        jumpkey = true;
         
     }
 

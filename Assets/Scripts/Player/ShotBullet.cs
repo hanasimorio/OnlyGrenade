@@ -65,7 +65,6 @@ public class ShotBullet : MonoBehaviour
                 GameObject obj = Instantiate(bulletPrefab, instantiatePosition, Quaternion.identity);
                 Rigidbody rid = obj.GetComponent<Rigidbody>();
                 rid.AddForce(shootVelocity * rid.mass, ForceMode.Impulse);
-                Destroy(obj, 5.0F);
                 cooldown = 0.0f;
 
             }

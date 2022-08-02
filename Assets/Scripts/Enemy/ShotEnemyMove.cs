@@ -16,34 +16,48 @@ public class ShotEnemyMove : MonoBehaviour
 
     private bool ontime;
 
+    private EnemyStatus status;
+
+    private Animator ani;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        player = null;
+        status = gameObject.GetComponent<EnemyStatus>();
+        ani = gameObject.GetComponent<Animator>();
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        if(player!=null)
+        if (!status.isdead)
         {
-            transform.LookAt(target.transform);
-            shotpos.transform.LookAt(target.transform);
-            if (!ontime)
+            if (player != null)
             {
-                StartCoroutine(BulletShot());
-                ontime = true;
-            }
+                transform.LookAt(target.transform);
+                shotpos.transform.LookAt(target.transform);
+                if (!ontime)
+                {
+                    StartCoroutine(BulletShot());
+                    ontime = true;
+                    ani.SetBool("Shot", true);
+                }
 
+            }
+        }
+        else
+        {
+            ani.SetBool("Death", true);
         }
         
     }
 
     IEnumerator BulletShot()
     {
-        while(true)
+        while(!status.isdead)
         {
             var bl = Instantiate(bullet, shotpos.position, Quaternion.identity);
             bl.GetComponent<Rigidbody>().AddForce(shotpos.forward * shotpower);
