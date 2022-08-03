@@ -12,7 +12,7 @@ public class SimpleGreDamage : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var enemy = other.gameObject.GetComponent<IDamage>();
+        var enemy = other.gameObject.GetComponent<IDamage>();//インターフェイス
         if (enemy != null)
         {
             enemy.ApplyDamage(200);

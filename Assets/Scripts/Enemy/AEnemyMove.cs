@@ -27,10 +27,10 @@ public class AEnemyMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!status.isdead)
+        if (!status.isdead)//€‚ñ‚Å‚¢‚é‚©”»’è
         {
             player = find.player;
-            if (player != null)
+            if (player != null)//ƒvƒŒƒCƒ„[‚ğŒ©‚Â‚¯‚Ä‚¢‚é‚©
             {
                 nav.destination = player.transform.position;
                 ani.SetBool("Chase", true);

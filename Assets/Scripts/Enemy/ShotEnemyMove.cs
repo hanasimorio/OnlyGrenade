@@ -33,7 +33,7 @@ public class ShotEnemyMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!status.isdead)
+        if (!status.isdead)//Ž€‚ñ‚Å‚¢‚é‚©”»’è
         {
             if (player != null)
             {

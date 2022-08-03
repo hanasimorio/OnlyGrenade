@@ -35,6 +35,12 @@ public class ShotBullet : MonoBehaviour
         get { return shootVelocity; }
     }
 
+    private PlayerStatus status;
+
+    private void Start()
+    {
+        status = gameObject.GetComponent<PlayerStatus>();
+    }
     void Update()
     {
         var wh = Input.GetAxis("Mouse ScrollWheel") * 5;//マウスホイールで強さを変更
@@ -55,18 +61,26 @@ public class ShotBullet : MonoBehaviour
         // 弾の生成座標を更新
         instantiatePosition = barrelObject.transform.position;
 
-        if (cooldown > 2.0f)
+        if (!status.isdead)
         {
-            // 発射
-            if (Input.GetMouseButtonUp(0))
+            if (status.grenadenum > 0)
             {
+                if (cooldown > 2.0f)
+                {
+                    // 発射
+                    if (Input.GetMouseButtonUp(0))
+                    {
 
-                // 弾を生成して飛ばす
-                GameObject obj = Instantiate(bulletPrefab, instantiatePosition, Quaternion.identity);
-                Rigidbody rid = obj.GetComponent<Rigidbody>();
-                rid.AddForce(shootVelocity * rid.mass, ForceMode.Impulse);
-                cooldown = 0.0f;
+                        // 弾を生成して飛ばす
+                        GameObject obj = Instantiate(bulletPrefab, instantiatePosition, Quaternion.identity);
+                        Rigidbody rid = obj.GetComponent<Rigidbody>();
+                        rid.AddForce(shootVelocity * rid.mass, ForceMode.Impulse);
+                        status.grenadenum -= 1;
+                        status.changegre();
+                        cooldown = 0.0f;
 
+                    }
+                }
             }
         }
     }

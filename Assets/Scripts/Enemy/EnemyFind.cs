@@ -20,7 +20,7 @@ public class EnemyFind : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player"))//ƒvƒŒƒCƒ„[‚ğŒ©‚Â‚¯‚½‚ç
         {
             //Debug.Log("hit");
             if (player == null)

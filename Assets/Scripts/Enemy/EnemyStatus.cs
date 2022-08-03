@@ -9,6 +9,10 @@ public class EnemyStatus : MonoBehaviour,IDamage
     [SerializeField] private float hp;
     public bool isdead = false;
 
+    /// <summary>
+    /// インターフェイスによってダメージが与えられる
+    /// </summary>
+    /// <param name="damage"></param>
     public void ApplyDamage(float damage)
     {
         hp -= damage;

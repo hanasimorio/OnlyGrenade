@@ -14,9 +14,9 @@ public class PlayerMove : MonoBehaviour
 
     private PlayerStatus status;
 
-    [SerializeField] private float movespeed;
-    private float dashspeed;
-    [SerializeField] private float jumppower;
+    [SerializeField,Tooltip("動くスピード")] private float movespeed;
+    private float dashspeed;//走った時のスピード
+    [SerializeField,Tooltip("ジャンプの高さ")] private float jumppower;
 
     private float horizontal;
     private float vertical;
@@ -75,16 +75,16 @@ public class PlayerMove : MonoBehaviour
                     ismove = false;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Space)) Jump();
+                if (Input.GetKeyDown(KeyCode.Space)) Jump();//ジャンプ
 
                 var horizontalrotation = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up);
 
-                velocity = horizontalrotation * new Vector3(horizontal, 0, vertical).normalized;
+                velocity = horizontalrotation * new Vector3(horizontal, 0, vertical).normalized;//カメラの前方向に正規化
                 var anispeed = Input.GetKey(KeyCode.LeftShift) ? 2 : 1;
                 var rotaSpeed = 600 * Time.deltaTime;
                 //Debug.Log(velocity);
 
-                if (Input.GetMouseButtonDown(0)) shotpre = true;
+                if (Input.GetMouseButtonDown(0)) shotpre = true;//射撃体勢に入る
                 if (Input.GetMouseButtonUp(0)) shotpre = false;
 
                 if (!shotpre)
@@ -115,11 +115,6 @@ public class PlayerMove : MonoBehaviour
                 ani.SetBool("Death", true);
             }
         }
-
-
-
-
-
     }
 
     private void FixedUpdate()
@@ -150,7 +145,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (isjump)
         {
-            if (collision.gameObject.CompareTag("Ground"))
+            if (collision.gameObject.CompareTag("Ground"))//地面との接地判定
             {
                 isjump = false;
             }
@@ -167,6 +162,9 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ジャンプの処理
+    /// </summary>
     void Jump()
     {
         if (isjump == true) return;

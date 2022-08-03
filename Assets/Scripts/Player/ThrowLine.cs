@@ -4,67 +4,40 @@ using UnityEngine;
 
 public class ThrowLine : MonoBehaviour
 {
-    /// <summary>
-    /// 放物線の描画ON/OFF
-    /// </summary>
     //[SerializeField]
-    private bool drawArc = false;
+    private bool drawArc = false;//放物線の描画
 
-    /// <summary>
-    /// 放物線を構成する線分の数
-    /// </summary>
     //[SerializeField]
-    private int segmentCount = 60;
+    private int segmentCount = 60;//構成する線
 
-    /// <summary>
-    /// 放物線を何秒分計算するか
-    /// </summary>
-    [SerializeField] private float predictionTime = 6.0F;
+    
+    [SerializeField,Tooltip("放物線の長さ")] private float predictionTime = 6.0F;
 
-    /// <summary>
-    /// 放物線のMaterial
-    /// </summary>
+    
     [SerializeField, Tooltip("放物線のマテリアル")]
     private Material arcMaterial;
 
-    /// <summary>
-    /// 放物線の幅
-    /// </summary>
+    
     [SerializeField, Tooltip("放物線の幅")]
     private float arcWidth = 0.02F;
 
-    /// <summary>
-    /// 放物線を構成するLineRenderer
-    /// </summary>
+    
     private LineRenderer[] lineRenderers;
 
-    /// <summary>
-    /// 弾の初速度や生成座標を持つコンポーネント
-    /// </summary>
-    private ShotBullet shootBullet;
+    private ShotBullet shootBullet;//弾を打つスクリプト
+    
+    private Vector3 initialVelocity;//初速度
 
-    /// <summary>
-    /// 弾の初速度
-    /// </summary>
-    private Vector3 initialVelocity;
+    private Vector3 arcStartPosition;//開始地点
 
-    /// <summary>
-    /// 放物線の開始座標
-    /// </summary>
-    private Vector3 arcStartPosition;
-
-    /// <summary>
-    /// 着弾マーカーオブジェクトのPrefab
-    /// </summary>
     [SerializeField, Tooltip("着弾地点に表示するマーカーのPrefab")]
     private GameObject pointerPrefab;
 
-    /// <summary>
-    /// 着弾点のマーカーのオブジェクト
-    /// </summary>
     private GameObject pointerObject;
 
     private Animator ani;
+
+    private PlayerStatus status;
 
 
     void Start()
@@ -80,66 +53,70 @@ public class ThrowLine : MonoBehaviour
         shootBullet = gameObject.GetComponent<ShotBullet>();
 
         ani = gameObject.GetComponent<Animator>();
+        status = gameObject.GetComponent<PlayerStatus>();
     }
 
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (!status.isdead)
         {
-            drawArc = true;
-            ani.SetBool("ThrowPre", true);
-        }
+            if (Input.GetMouseButtonDown(0))
+            {
+                drawArc = true;
+                ani.SetBool("ThrowPre", true);
+            }
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            drawArc = false;
-            ani.SetTrigger("Throw");
-            ani.SetBool("ThrowPre", false);
-        }
+            if (Input.GetMouseButtonUp(0))
+            {
+                drawArc = false;
+                ani.SetTrigger("Throw");
+                ani.SetBool("ThrowPre", false);
+            }
 
             // 初速度と放物線の開始座標を更新
             initialVelocity = shootBullet.ShootVelocity;
             arcStartPosition = shootBullet.InstantiatePosition;
 
-        if (drawArc)
-        {
-            // 放物線を表示
-            float timeStep = predictionTime / segmentCount;
-            bool draw = false;
-            float hitTime = float.MaxValue;
-            for (int i = 0; i < segmentCount; i++)
+            if (drawArc)
             {
-                // 線の座標を更新
-                float startTime = timeStep * i;
-                float endTime = startTime + timeStep;
-                SetLineRendererPosition(i, startTime, endTime, !draw);
-
-                // 衝突判定
-                if (!draw)
+                // 放物線を表示
+                float timeStep = predictionTime / segmentCount;
+                bool draw = false;
+                float hitTime = float.MaxValue;
+                for (int i = 0; i < segmentCount; i++)
                 {
-                    hitTime = GetArcHitTime(startTime, endTime);
-                    if (hitTime != float.MaxValue)
+                    // 線の座標を更新
+                    float startTime = timeStep * i;
+                    float endTime = startTime + timeStep;
+                    SetLineRendererPosition(i, startTime, endTime, !draw);
+
+                    // 衝突判定
+                    if (!draw)
                     {
-                        draw = true; // 衝突したらその先の放物線は表示しない
+                        hitTime = GetArcHitTime(startTime, endTime);
+                        if (hitTime != float.MaxValue)
+                        {
+                            draw = true; // 衝突したらその先の放物線は表示しない
+                        }
                     }
                 }
-            }
 
-            // マーカーの表示
-            if (hitTime != float.MaxValue)
-            {
-                Vector3 hitPosition = GetArcPositionAtTime(hitTime);
-                ShowPointer(hitPosition);
+                // マーカーの表示
+                if (hitTime != float.MaxValue)
+                {
+                    Vector3 hitPosition = GetArcPositionAtTime(hitTime);
+                    ShowPointer(hitPosition);
+                }
             }
-        }
-        else
-        {
-            // 放物線とマーカーを表示しない
-            for (int i = 0; i < lineRenderers.Length; i++)
+            else
             {
-                lineRenderers[i].enabled = false;
+                // 放物線とマーカーを表示しない
+                for (int i = 0; i < lineRenderers.Length; i++)
+                {
+                    lineRenderers[i].enabled = false;
+                }
+                pointerObject.SetActive(false);
             }
-            pointerObject.SetActive(false);
         }
     }
 
@@ -181,13 +158,12 @@ public class ThrowLine : MonoBehaviour
             newObject.transform.SetParent(arcObjectsParent.transform);
             lineRenderers[i] = newObject.AddComponent<LineRenderer>();
 
-            // 光源関連を使用しない
+            
             lineRenderers[i].receiveShadows = false;
             lineRenderers[i].reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
             lineRenderers[i].lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
             lineRenderers[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-            // 線の幅とマテリアル
             lineRenderers[i].material = arcMaterial;
             lineRenderers[i].startWidth = arcWidth;
             lineRenderers[i].endWidth = arcWidth;
