@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         {
             if(Input.anyKey)
             {
-                SceneManager.LoadScene("TestScene");
+                SceneManager.LoadScene("TutorialScene");
                 SetState(state.playing);
 
             }
