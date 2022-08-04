@@ -36,10 +36,12 @@ public class ShotBullet : MonoBehaviour
     }
 
     private PlayerStatus status;
+    private SePlayerController sp;
 
     private void Start()
     {
         status = gameObject.GetComponent<PlayerStatus>();
+        sp = gameObject.GetComponent<SePlayerController>();
     }
     void Update()
     {
@@ -75,6 +77,7 @@ public class ShotBullet : MonoBehaviour
                         GameObject obj = Instantiate(bulletPrefab, instantiatePosition, Quaternion.identity);
                         Rigidbody rid = obj.GetComponent<Rigidbody>();
                         rid.AddForce(shootVelocity * rid.mass, ForceMode.Impulse);
+                        sp.ThrowSe();
                         status.grenadenum -= 1;
                         status.changegre();
                         cooldown = 0.0f;

@@ -7,6 +7,8 @@ public class AEnemyMove : MonoBehaviour
 {
     [SerializeField,Tooltip("í«Ç¢Ç©ÇØÇÈëŒè€")] private GameObject player;
 
+    private bool findplayer = false;
+
     private NavMeshAgent nav;
 
     private EnemyStatus status;
@@ -15,13 +17,16 @@ public class AEnemyMove : MonoBehaviour
 
     private EnemyFind find;
 
+    private SeEnemyController se;
+
+
     void Start()
     {
         nav = gameObject.GetComponent<NavMeshAgent>();
         status = gameObject.GetComponent<EnemyStatus>();
         ani = gameObject.GetComponent<Animator>();
         find = gameObject.transform.GetChild(2).gameObject.GetComponent<EnemyFind>();
-        
+        se = gameObject.GetComponent<SeEnemyController>();
     }
 
     // Update is called once per frame
@@ -34,6 +39,11 @@ public class AEnemyMove : MonoBehaviour
             {
                 nav.destination = player.transform.position;
                 ani.SetBool("Chase", true);
+                if (!findplayer)
+                {
+                    findplayer = true;
+                    se.findeye();
+                }
             }
         }
         else

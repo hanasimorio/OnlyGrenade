@@ -8,6 +8,7 @@ public class PlayerStatus : MonoBehaviour,IPlayerDamage
     [SerializeField] private float hp;
     public bool isdead = false;
     private UIManager UI;
+    private SePlayerController se;
 
     public int grenadenum;//グレネードの数
 
@@ -15,6 +16,7 @@ public class PlayerStatus : MonoBehaviour,IPlayerDamage
     {
         UI = GameObject.Find("UIManager").transform.gameObject.GetComponent<UIManager>();
         UI.changegrenade(grenadenum);
+        se = gameObject.GetComponent<SePlayerController>();
     }
 
     public void changegre()
@@ -29,9 +31,10 @@ public class PlayerStatus : MonoBehaviour,IPlayerDamage
     public void ApplyDamage(float damage)
     {
         hp -= damage;
-        if(hp <= 0)
+        if(hp <= 0 && !isdead)
         {
             isdead = true;
+            se.deadSe();
             if(UI !=null)
             UI.deathUI();
         }

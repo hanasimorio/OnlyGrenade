@@ -9,6 +9,13 @@ public class EnemyStatus : MonoBehaviour,IDamage
     [SerializeField] private float hp;
     public bool isdead = false;
 
+    private SeEnemyController se;
+
+    private void Start()
+    {
+        se = gameObject.GetComponent<SeEnemyController>();
+    }
+
     /// <summary>
     /// インターフェイスによってダメージが与えられる
     /// </summary>
@@ -16,11 +23,11 @@ public class EnemyStatus : MonoBehaviour,IDamage
     public void ApplyDamage(float damage)
     {
         hp -= damage;
-        if(hp < 0)
+        if(hp < 0 && !isdead)
         {
             isdead = true;
             Invoke("brea", 5);
-            
+            se.deadSe();
         }
     }
 

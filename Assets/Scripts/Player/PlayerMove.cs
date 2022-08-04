@@ -13,6 +13,7 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody rb;
 
     private PlayerStatus status;
+    
 
     [SerializeField,Tooltip("動くスピード")] private float movespeed;
     private float dashspeed;//走った時のスピード
