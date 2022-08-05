@@ -22,5 +22,6 @@ public class ClearGate : MonoBehaviour
     {
         if(UI != null)
         UI.clearUI();
+        GameManager.instance.SetState(GameManager.state.clear);
     }
 }

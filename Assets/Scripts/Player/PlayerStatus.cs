@@ -14,6 +14,7 @@ public class PlayerStatus : MonoBehaviour,IPlayerDamage
 
     private void Start()
     {
+        havegrenade(GameManager.instance.stagenum);
         UI = GameObject.Find("UIManager").transform.gameObject.GetComponent<UIManager>();
         UI.changegrenade(grenadenum);
         se = gameObject.GetComponent<SePlayerController>();
@@ -37,6 +38,20 @@ public class PlayerStatus : MonoBehaviour,IPlayerDamage
             se.deadSe();
             if(UI !=null)
             UI.deathUI();
+            GameManager.instance.SetState(GameManager.state.dead);
+        }
+    }
+
+    private void havegrenade(int a)
+    {
+        switch(a)
+        {
+            case 1:
+                grenadenum = 10;
+                break;
+            case 2:
+                grenadenum = 20;
+                break;
         }
     }
 }

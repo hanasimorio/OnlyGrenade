@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,14 +8,17 @@ public class GameManager : MonoBehaviour
     {
         Title,
         playing,
+        dead,
         clear,
     }
 
     private state currentstate;
 
     public static GameManager instance = null;
+    private ChangeScene cs;
 
-    public int stagenum = 1;
+    public int stagenum = 0;
+
     private void Awake()
     {
         if (instance == null)
@@ -30,7 +32,7 @@ public class GameManager : MonoBehaviour
         }
 
         SetState(state.Title);
-        
+        cs = GameObject.Find("SceneManager").gameObject.GetComponent<ChangeScene>() ;
     }
     private void Update()
     {
@@ -43,8 +45,8 @@ public class GameManager : MonoBehaviour
         {
             if(Input.anyKey)
             {
-                SceneManager.LoadScene("TutorialScene");
-                SetState(state.playing);
+                if (cs != null)
+                    cs.nextstage();
 
             }
         }
@@ -62,7 +64,19 @@ public class GameManager : MonoBehaviour
         switch (st)
         {
             case state.Title:
+                Cursor.visible = true;
+                break;
 
+            case state.playing:
+                Cursor.visible = false;
+                break;
+
+            case state.dead:
+                Cursor.visible = true;
+                break;
+
+            case state.clear:
+                Cursor.visible = true;
                 break;
         }
     }
