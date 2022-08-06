@@ -17,20 +17,20 @@ public class chagecolor : MonoBehaviour
         a = 1;
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         if (flag)
         {
             a -= Time.deltaTime;
-            text.color = new Color(0, 0, 0, a);
+            text.color = new Color(1, 1, 1, a);
             if (a < 0)
                 flag = false;
         }
         else
         {
             a += Time.deltaTime;
-            text.color = new Color(0, 0, 0, a);
+            text.color = new Color(1, 1, 1, a);
             if (a > 1)
                 flag = true;
         }

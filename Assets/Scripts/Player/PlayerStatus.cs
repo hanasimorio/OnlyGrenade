@@ -42,6 +42,10 @@ public class PlayerStatus : MonoBehaviour,IPlayerDamage
         }
     }
 
+    /// <summary>
+    /// ステージによってグレネードのもてる数を変える
+    /// </summary>
+    /// <param name="a"></param>
     private void havegrenade(int a)
     {
         switch(a)
@@ -51,6 +55,12 @@ public class PlayerStatus : MonoBehaviour,IPlayerDamage
                 break;
             case 2:
                 grenadenum = 20;
+                break;
+            case 3:
+                grenadenum = 30;
+                break;
+            case 4:
+                grenadenum = 30;
                 break;
         }
     }

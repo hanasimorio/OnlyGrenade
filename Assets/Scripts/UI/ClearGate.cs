@@ -7,21 +7,25 @@ public class ClearGate : MonoBehaviour
     // Start is called before the first frame update
 
     private UIManager UI;
+
+    private bool ontime = true;
     void Start()
     {
         UI = GameObject.Find("UIManager").transform.gameObject.GetComponent<UIManager>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// ÉSÅ[ÉãÇµÇΩèàóù
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
         if(UI != null)
         UI.clearUI();
-        GameManager.instance.SetState(GameManager.state.clear);
+        if (ontime)
+        {
+            GameManager.instance.SetState(GameManager.state.clear);
+            ontime = false;
+        }
     }
 }

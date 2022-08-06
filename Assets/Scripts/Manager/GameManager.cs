@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    //ゲームステート
     public enum state
     {
         Title,
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
         clear,
     }
 
-    private state currentstate;
+    public state currentstate;
 
     public static GameManager instance = null;
     private ChangeScene cs;
@@ -41,6 +42,11 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         }
 
+        if (cs == null)
+        {
+            cs = GameObject.Find("SceneManager").gameObject.GetComponent<ChangeScene>();
+        }
+
         if(currentstate == state.Title)
         {
             if(Input.anyKey)
@@ -52,13 +58,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// 今のゲーム状況を変える
+    /// </summary>
+    /// <param name="st"></param>
     public void SetState(state st)
     {
         currentstate = st;
         changestate(currentstate);
     }
 
+
+    /// <summary>
+    /// ゲーム状況によってマウスカーソルを表示するか非表示にするか
+    /// </summary>
+    /// <param name="st"></param>
     private void changestate(state st)
     {
         switch (st)

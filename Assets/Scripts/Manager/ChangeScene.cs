@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class ChangeScene : MonoBehaviour
 {
-
     private GameObject fadecanvas;
 
     private void Start()
@@ -24,6 +23,7 @@ public class ChangeScene : MonoBehaviour
         GameManager.instance.stagenum = 0;
         if (fadecanvas != null)
             fadecanvas.GetComponent<FadeController>().fadeOut();
+        Debug.Log(GameManager.instance.currentstate);
         await Task.Delay(4000);
         SceneManager.LoadScene(GameManager.instance.stagenum);
     }
@@ -36,6 +36,7 @@ public class ChangeScene : MonoBehaviour
         GameManager.instance.SetState(GameManager.state.playing);
         if (fadecanvas != null)
             fadecanvas.GetComponent<FadeController>().fadeOut();
+        Debug.Log(GameManager.instance.currentstate);
         await Task.Delay(4000);
         SceneManager.LoadScene(GameManager.instance.stagenum);
     }
@@ -48,6 +49,7 @@ public class ChangeScene : MonoBehaviour
         GameManager.instance.SetState(GameManager.state.playing);
         if (fadecanvas != null)
             fadecanvas.GetComponent<FadeController>().fadeOut();
+        Debug.Log(GameManager.instance.currentstate);
         await Task.Delay(4000);
         SceneManager.LoadScene(GameManager.instance.stagenum);
     }

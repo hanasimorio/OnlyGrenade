@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SeEnemyController : MonoBehaviour
 {
+    [SerializeField, Tooltip("’e‚ð‘Å‚Â‰¹")] AudioClip Shotclip;
     [SerializeField, Tooltip("‘–‚é‚Æ‚«‚Ì‘«‰¹")] AudioClip[] Dashclips;
     [SerializeField, Tooltip("Ž€‚ñ‚¾‚Æ‚«‚Ì‰¹")] AudioClip deadclip;
     [SerializeField, Tooltip("“|‚ê‚é‰¹")] AudioClip taoreruclip;
@@ -14,6 +15,11 @@ public class SeEnemyController : MonoBehaviour
     void Start()
     {
         AS = gameObject.GetComponent<AudioSource>();
+    }
+
+    public void shotse()
+    {
+        AS.PlayOneShot(Shotclip);
     }
 
     /// <summary>

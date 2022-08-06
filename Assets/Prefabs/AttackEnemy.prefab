@@ -788,7 +788,7 @@ GameObject:
   - component: {fileID: 4719740530495071659}
   - component: {fileID: 4719740530495071656}
   - component: {fileID: 4719740530495071657}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: FindCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1827,6 +1827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2724d87dcf3a89c45be9be8c879903d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Shotclip: {fileID: 8300000, guid: a0c2a01d59e944340a36c6a3c2534c51, type: 3}
   Dashclips:
   - {fileID: 8300000, guid: 9ade10608a676944e9b5138601abad87, type: 3}
   - {fileID: 8300000, guid: e498f701d775b8447a0fdf6e77fef3c8, type: 3}
