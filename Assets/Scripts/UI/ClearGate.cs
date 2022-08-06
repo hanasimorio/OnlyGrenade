@@ -20,12 +20,15 @@ public class ClearGate : MonoBehaviour
     /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
-        if(UI != null)
-        UI.clearUI();
-        if (ontime)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            GameManager.instance.SetState(GameManager.state.clear);
-            ontime = false;
+            if (UI != null)
+                UI.clearUI();
+            if (ontime)
+            {
+                GameManager.instance.SetState(GameManager.state.clear);
+                ontime = false;
+            }
         }
     }
 }
